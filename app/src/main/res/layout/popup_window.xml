@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="250dp"
-    android:background="#83979b">
+    android:background="@drawable/layout_bg">
 
     <TextView
         android:id="@+id/popup_nombre"
