@@ -15,7 +15,7 @@
         android:text="This is a popup window."
         android:textSize="22sp" />
 
-    <TextView
+    <Button
         android:id="@+id/popup_telefono"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
