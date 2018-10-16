@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -32,34 +33,31 @@ public class ContactsActivity extends AppCompatActivity {
 
     SQLiteOpenHelper sqLite;
 
-    ArrayList<Contacto> contactos;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         listView = findViewById(R.id.list_view);
-        contactos = new ArrayList<>();
+        ArrayList<Contacto> contactos = new ArrayList<>();
         comprobarPermisoLlamada();
-        ArrayList<String> nombres = new ArrayList<>();
         try {
-            nombres = leerDB();
+            contactos = leerDB();
         } catch (Exception e) {
             e.printStackTrace();
-            nombres.add("No hay ningún contacto.");
+            contactos.add(new Contacto(0, "No hay ningún contacto", "", "", ""));
         }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, nombres);
-        listView.setAdapter(arrayAdapter);
+        final ContactsAdapter contactsAdapter = new ContactsAdapter(contactos, getApplicationContext());
+        listView.setAdapter(contactsAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l) {
-                mostrarPopUp(view, contactos.get(posicion));
+                mostrarPopUp(view, contactsAdapter.getItem(posicion));
             }
         });
     }
 
-    private ArrayList<String> leerDB() {
-        ArrayList<String> nombres = new ArrayList<>();
+    private ArrayList<Contacto> leerDB() throws SQLException {
+        ArrayList<Contacto> contactos = new ArrayList<>();
         sqLite = new SQLiteOpenHelper(this, "agenda", null, 1) {
             @Override
             public void onCreate(SQLiteDatabase sqLiteDatabase) {
@@ -73,11 +71,10 @@ public class ContactsActivity extends AppCompatActivity {
         };
         Cursor cursor = sqLite.getWritableDatabase().rawQuery("SELECT * FROM agenda", null);
         while (cursor.moveToNext()) {
-            nombres.add(cursor.getString(1) + " " + cursor.getString(2));
             contactos.add(new Contacto(cursor.getInt(0), cursor.getString(1),
                     cursor.getString(2), cursor.getString(3), cursor.getString(4)));
         }
-        return nombres;
+        return contactos;
     }
 
     public void mostrarPopUp(View view, final Contacto contacto) {

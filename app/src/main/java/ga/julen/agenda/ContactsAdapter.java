@@ -46,7 +46,7 @@ public class ContactsAdapter implements ListAdapter {
     }
 
     @Override
-    public Object getItem(int posicion) {
+    public Contacto getItem(int posicion) {
         return contactos.get(posicion);
     }
 
