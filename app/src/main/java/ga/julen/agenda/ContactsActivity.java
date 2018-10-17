@@ -13,6 +13,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,9 +24,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,6 +36,7 @@ import java.util.ArrayList;
 public class ContactsActivity extends AppCompatActivity {
 
     private ListView listView;
+    private SearchView buscador;
 
     SQLiteOpenHelper sqLite;
 
@@ -48,10 +55,33 @@ public class ContactsActivity extends AppCompatActivity {
         }
         final ContactsAdapter contactsAdapter = new ContactsAdapter(contactos, getApplicationContext());
         listView.setAdapter(contactsAdapter);
+        listView.setTextFilterEnabled(true);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l) {
                 mostrarPopUp(view, contactsAdapter.getItem(posicion));
+            }
+        });
+        buscador=findViewById(R.id.buscador);
+        buscador.setIconifiedByDefault(false);
+        buscador.setSubmitButtonEnabled(true);
+        buscador.setQueryHint("Buscar");
+        buscador.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Log.d("busqueda","realizada");
+                if (TextUtils.isEmpty(s)) {
+                    listView.clearTextFilter();
+                } else {
+                    listView.setFilterText(s);
+                }
+                //contactsAdapter.getFilter().filter(buscador.getQuery());
+                return true;
             }
         });
     }
