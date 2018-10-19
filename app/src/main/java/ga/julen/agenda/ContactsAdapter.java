@@ -1,7 +1,6 @@
 package ga.julen.agenda;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ public class ContactsAdapter extends BaseAdapter implements Filterable {
     private Context contexto;
 
     public ContactsAdapter(ArrayList<Contacto> contactos, Context contexto) {
-        super();
         //this.contactos = contactos;
         this.contactosMostrados = contactos;
         this.contexto = contexto;
@@ -68,7 +66,8 @@ public class ContactsAdapter extends BaseAdapter implements Filterable {
                     contactos = contactosMostrados;
                 if (constraint != null) {
                     for (Contacto contacto : contactos) {
-                        if (contacto.getNombre().toLowerCase().contains(constraint.toString().toLowerCase()))
+                        String nombreCompleto = contacto.getNombre() + " " + contacto.getApellido();
+                        if (nombreCompleto.toLowerCase().contains(constraint.toString().toLowerCase()))
                             contactosFiltrados.add(contacto);
                     }
                     results.count = contactosFiltrados.size();
