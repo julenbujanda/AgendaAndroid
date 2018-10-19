@@ -68,7 +68,8 @@ public class ContactsAdapter extends BaseAdapter implements Filterable {
                     contactos = contactosMostrados;
                 if (constraint != null) {
                     for (Contacto contacto : contactos) {
-                        if (contacto.getNombre().toLowerCase().contains(constraint.toString().toLowerCase()))
+                        String nombreCompleto = contacto.getNombre() + " " + contacto.getApellido();
+                        if (nombreCompleto.toLowerCase().contains(constraint.toString().toLowerCase()))
                             contactosFiltrados.add(contacto);
                     }
                     results.count = contactosFiltrados.size();
