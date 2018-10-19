@@ -52,16 +52,6 @@ public class ContactsAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public int getItemViewType(int i) {
-        return contactosMostrados.size();
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return contactosMostrados.size();
-    }
-
-    @Override
     public boolean isEmpty() {
         return contactosMostrados.isEmpty();
     }
